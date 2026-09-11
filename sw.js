@@ -16,6 +16,11 @@ const ASSETS = [
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
+  './icons/icon-maskable-192.png',
+  './icons/icon-maskable-512.png',
+  './icons/apple-touch-icon.png',
+  './icons/favicon-32.png',
+  './icons/favicon-48.png',
   './icons/ts-logo.png',
 ];
 const APP_SHELL_PATHS = new Set(ASSETS.map(asset => new URL(asset, self.location.href).pathname));
