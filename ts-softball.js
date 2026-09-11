@@ -404,6 +404,8 @@ const WALKUP_LIBRARY = [
   { name: 'Walking On Sunshine',            file: 'walkupsongs/Walking On Sunshine.mp3' },
   { name: 'Get Silly',                      file: 'walkupsongs/Get Silly.mp3' },
   { name: 'Teenage Dirtbag',                file: 'walkupsongs/Teenage Dirtbag.mp3' },
+  { name: 'Dai Dai',                        file: 'walkupsongs/Dai Dai.mp3' },
+  { name: 'My Little Pony',                 file: 'walkupsongs/My Little Pony.mp3' },
 ];
 
 function mediaPath(src) {

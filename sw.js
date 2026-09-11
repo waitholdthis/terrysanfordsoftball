@@ -155,6 +155,8 @@ const MEDIA_ASSETS = [
   './walkupsongs/Walking On Sunshine.mp3',
   './walkupsongs/Get Silly.mp3',
   './walkupsongs/Teenage Dirtbag.mp3',
+  './walkupsongs/Dai Dai.mp3',
+  './walkupsongs/My Little Pony.mp3',
 ];
 
 self.addEventListener('install', e => {
