@@ -1,34 +1,22 @@
-/* Foundry Service Worker — offline-first */
+/* Terry Sanford Softball Service Worker — offline-first */
 
-const CACHE = 'foundry-v83';
+const CACHE = 'ts-softball-v3';
 const ASSETS = [
   './index.html',
-  './foundry.html',
+  './ts-softball.html',
   './app.html',
   './app.css',
   './app.js',
   './styles.css',
   './script.js',
-  './foundry.css',
-  './foundry.js',
-  './foundry-v63.js',
-  './foundry-v64.js',
-  './foundry-v65.js',
-  './foundry-v66.js',
-  './foundry-v67.js',
-  './foundry-v68.js',
-  './foundry-v69.js',
-  './foundry-v70.js',
-  './foundry-v71.js',
-  './foundry-v72.js',
-  './foundry-v73.js',
-  './foundry-v74.js',
+  './ts-softball.css',
+  './ts-softball.js',
   './scorebook-export.js',
   './scorebook-export-v60.js',
   './manifest.json',
-  './icons/icon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',
+  './icons/ts-logo.png',
 ];
 const APP_SHELL_PATHS = new Set(ASSETS.map(asset => new URL(asset, self.location.href).pathname));
 
@@ -44,7 +32,7 @@ const MEDIA_ASSETS = [
   './BetweenInnings/We Ready.mp3',
   './sounds/Angerdingus.mp3',
   './sounds/Hi.mp3',
-  './sounds/Homerun.mp3',
+  './sounds/homerun-call.mp3',
   './sounds/Hot Dog.mp3',
   './sounds/Wow.mp3',
   './sounds/Rally.mp3',

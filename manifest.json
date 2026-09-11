@@ -1,21 +1,15 @@
 {
-  "name": "Foundry — Dugout Command Center",
-  "short_name": "Foundry",
+  "name": "Terry Sanford Softball — Dugout Command Center",
+  "short_name": "TS Softball",
   "description": "Lineup builder, digital scorebook, and Ballpark DJ in one.",
-  "start_url": "foundry.html?v=74",
+  "start_url": "ts-softball.html?v=3",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#020617",
-  "theme_color": "#020617",
+  "background_color": "#020b18",
+  "theme_color": "#061f43",
   "categories": ["sports", "utilities"],
   "icons": [
-    {
-      "src": "icons/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
     {
       "src": "icons/icon-192.png",
       "sizes": "192x192",
@@ -33,7 +27,7 @@
   "shortcuts": [
     {
       "name": "New Game",
-      "url": "foundry.html?start=game&v=74",
+      "url": "ts-softball.html?start=game&v=3",
       "description": "Jump straight to game setup"
     }
   ]

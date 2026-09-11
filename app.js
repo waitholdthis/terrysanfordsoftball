@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   Foundry — App Page Script
+   Terry Sanford Softball — App Page Script
    App-specific interactions: scoring ring animation,
    stat count-ups, store button states.
 ═══════════════════════════════════════════════════════ */
@@ -37,7 +37,7 @@
   }
 
   if (isStandalone) {
-    setStatus("Foundry is already installed on this device.");
+    setStatus("TS Softball is already installed on this device.");
     installButtons.forEach(btn => { btn.disabled = true; });
     return;
   }
@@ -45,7 +45,7 @@
   window.addEventListener("beforeinstallprompt", e => {
     e.preventDefault();
     deferredPrompt = e;
-    setStatus("Install is ready. Tap Install App to add Foundry to your home screen.");
+    setStatus("Install is ready. Tap Install App to add TS Softball to your home screen.");
   });
 
   installButtons.forEach(btn => {
@@ -61,7 +61,7 @@
       deferredPrompt.prompt();
       const choice = await deferredPrompt.userChoice.catch(() => null);
       deferredPrompt = null;
-      setStatus(choice?.outcome === "accepted" ? "Foundry install started." : "Install dismissed. You can try again from your browser menu.");
+      setStatus(choice?.outcome === "accepted" ? "TS Softball install started." : "Install dismissed. You can try again from your browser menu.");
     });
   });
 
@@ -70,7 +70,7 @@
   });
 
   window.addEventListener("appinstalled", () => {
-    setStatus("Foundry was installed successfully.");
+    setStatus("TS Softball was installed successfully.");
     installButtons.forEach(btn => { btn.disabled = true; });
   });
 })();
@@ -151,7 +151,7 @@
     if (!num) return;
 
     step.addEventListener("mouseenter", () => {
-      num.style.color = "rgba(245, 158, 11, 0.7)";
+      num.style.color = "rgba(213, 0, 70, 0.7)";
       num.style.transform = "scale(1.05)";
       num.style.transition = "all 280ms ease";
     });

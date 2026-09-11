@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   Foundry — Main App JS
+   Terry Sanford Softball — Main App JS
    State → Roster → Lineup → Game Engine → Audio → PDF
 ═══════════════════════════════════════════════════════ */
 "use strict";
@@ -14,7 +14,7 @@ if ('serviceWorker' in navigator) {
 /* ─────────────────────────────────────────────
    STATE
 ───────────────────────────────────────────── */
-const STORAGE_KEY = 'foundry_v1';
+const STORAGE_KEY = 'ts_softball_v1';
 
 const DEFAULT_STATE = {
   team: null,          // {name, sport, field}
@@ -33,8 +33,8 @@ const DEFAULT_STATE = {
     customText: '',
     paMode: false,
     paTemplate: 'Now batting. {position}. Number {number}. {name}!',
-    elKey: '',
-    elVoiceId: 'pNInz6obpgDQGcFmaJgB',
+    engine: 'kokoro',
+    kokoroVoice: 'am_michael',
   },
   playlist: {
     tracks: [],    // [{key, name}] — keys are IndexedDB blob keys
@@ -109,7 +109,7 @@ function weAreBatting() {
    Walk-up audio blobs stored by key (playerId)
 ───────────────────────────────────────────── */
 let audioDB = null;
-const DB_NAME = 'foundry_audio', DB_STORE = 'files', DB_VER = 1;
+const DB_NAME = 'ts_softball_audio', DB_STORE = 'files', DB_VER = 1;
 
 function openAudioDB() {
   return new Promise((resolve, reject) => {
@@ -204,7 +204,7 @@ document.getElementById('installDismiss').addEventListener('click', () => {
 const setupForm   = document.getElementById('setupForm');
 const teamNameEl  = document.getElementById('teamName');
 const homeFieldEl = document.getElementById('homeField');
-let selectedSport = 'baseball';
+let selectedSport = 'softball';
 
 // Segmented sport selector
 document.querySelectorAll('[data-sport]').forEach(btn => {
@@ -1751,7 +1751,7 @@ document.getElementById('abandonGameBtn').addEventListener('click', () => {
   S.team = null;
   saveState();
   gameMenuOverlay.classList.add('hidden');
-  teamNameEl.value = '';
+  teamNameEl.value = 'Terry Sanford';
   navigate('setup');
 });
 
@@ -1919,7 +1919,7 @@ function bindSeasonSort(headId, bodyId) {
 /* ─────────────────────────────────────────────
    SPRAY CHARTS
 ───────────────────────────────────────────── */
-const SPRAY_COLORS = { '1B': '#22C55E', '2B': '#3B82F6', '3B': '#F59E0B', 'HR': '#EF4444' };
+const SPRAY_COLORS = { '1B': '#22C55E', '2B': '#3B82F6', '3B': '#d50046', 'HR': '#EF4444' };
 const SPRAY_W = 200, SPRAY_H = 190;
 
 const FIELD_PATHS = `
@@ -2268,8 +2268,13 @@ document.getElementById('atBatReplay')?.addEventListener('click', replayCurrentB
 document.getElementById('atBatAnnounceBtn')?.addEventListener('click', replayCurrentBatterIntro);
 
 
-/* ElevenLabs — session cache so the same line isn't re-generated mid-game */
-const elCache = new Map();
+/* Kokoro — free local enhanced voice with persistent announcement cache */
+const KOKORO_MODULE_URL = 'https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm';
+const KOKORO_MODEL_ID = 'onnx-community/Kokoro-82M-v1.0-ONNX';
+const kokoroSessionCache = new Map();
+const kokoroObjectUrls = new Set();
+let kokoroTTS = null;
+let kokoroLoadPromise = null;
 
 function interruptBatterIntroAudio() {
   if (activeAnnouncementAudio) {
@@ -2285,29 +2290,86 @@ function interruptBatterIntroAudio() {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 }
 
-async function generateElevenLabsAudio(text, apiKey, voiceId) {
-  const cacheKey = `${voiceId}:${text}`;
-  if (elCache.has(cacheKey)) return elCache.get(cacheKey);
+function setKokoroStatus(kind, text, progress = null) {
+  const box = document.getElementById('svKokoroStatus');
+  const label = document.getElementById('svKokoroStatusText');
+  const bar = document.getElementById('svKokoroProgress');
+  const fill = document.getElementById('svKokoroProgressFill');
+  if (box) box.className = `sv-engine-status${kind ? ` ${kind}` : ''}`;
+  if (label) label.textContent = text;
+  if (bar) bar.hidden = progress == null;
+  if (fill && progress != null) fill.style.width = `${Math.max(0, Math.min(100, progress))}%`;
+}
 
-  const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-    method: 'POST',
-    headers: {
-      'xi-api-key': apiKey,
-      'Content-Type': 'application/json',
-      'Accept': 'audio/mpeg',
-    },
-    body: JSON.stringify({
-      text,
-      model_id: 'eleven_turbo_v2_5',
-      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.35, use_speaker_boost: true },
-    }),
+async function loadKokoroModel() {
+  if (kokoroTTS) return kokoroTTS;
+  if (kokoroLoadPromise) return kokoroLoadPromise;
+
+  let highestProgress = 0;
+  setKokoroStatus('', 'Downloading enhanced announcer…', 2);
+  kokoroLoadPromise = (async () => {
+    const { KokoroTTS } = await import(KOKORO_MODULE_URL);
+    const progress_callback = info => {
+      if (typeof info?.progress !== 'number') return;
+      highestProgress = Math.max(highestProgress, info.progress);
+      setKokoroStatus('', `Downloading enhanced announcer… ${Math.round(highestProgress)}%`, highestProgress);
+    };
+    kokoroTTS = await KokoroTTS.from_pretrained(KOKORO_MODEL_ID, {
+      dtype: 'q8',
+      device: 'wasm',
+      progress_callback,
+    });
+    setKokoroStatus('ready', 'Enhanced announcer ready. Generated lines will play offline.', null);
+    return kokoroTTS;
+  })().catch(error => {
+    kokoroLoadPromise = null;
+    setKokoroStatus('error', 'Enhanced voice unavailable. Device voice fallback is active.', null);
+    throw error;
   });
-  if (!res.ok) throw new Error(`ElevenLabs ${res.status}`);
-  const blob = await res.blob();
-  const url  = URL.createObjectURL(blob);
-  elCache.set(cacheKey, url);
+  return kokoroLoadPromise;
+}
+
+function kokoroCacheKey(text, voice, speed) {
+  return `kokoro:${voice}:${Number(speed).toFixed(2)}:${text}`;
+}
+
+async function generateKokoroAudio(text, voice, speed, allowModelLoad = true) {
+  const cacheKey = kokoroCacheKey(text, voice, speed);
+  if (kokoroSessionCache.has(cacheKey)) return kokoroSessionCache.get(cacheKey);
+
+  const cachedBlob = await loadAudioBlob(cacheKey).catch(() => null);
+  if (cachedBlob) {
+    const cachedUrl = URL.createObjectURL(cachedBlob);
+    kokoroObjectUrls.add(cachedUrl);
+    kokoroSessionCache.set(cacheKey, cachedUrl);
+    return cachedUrl;
+  }
+
+  if (!allowModelLoad && !kokoroTTS && !kokoroLoadPromise) {
+    throw new Error('Enhanced voice has not been prepared yet');
+  }
+
+  const tts = await loadKokoroModel();
+  setKokoroStatus('', 'Generating announcement…', null);
+  const audio = await tts.generate(text, { voice, speed });
+  const blob = audio.toBlob();
+  await saveAudioBlob(cacheKey, blob);
+  const url = URL.createObjectURL(blob);
+  kokoroObjectUrls.add(url);
+  kokoroSessionCache.set(cacheKey, url);
+  setKokoroStatus('ready', 'Enhanced announcer ready. Announcement saved offline.', null);
   return url;
 }
+
+window.addEventListener('pagehide', () => {
+  kokoroObjectUrls.forEach(url => URL.revokeObjectURL(url));
+  kokoroObjectUrls.clear();
+  kokoroSessionCache.clear();
+  const model = kokoroTTS;
+  kokoroTTS = null;
+  kokoroLoadPromise = null;
+  if (model?.dispose) Promise.resolve(model.dispose()).catch(() => {});
+});
 
 function playAudioAndWait(src) {
   return new Promise(resolve => {
@@ -2355,13 +2417,13 @@ async function announceText(text) {
   const line = String(text || '').trim();
   if (!line) return;
 
-  if (sv.paMode && sv.elKey) {
+  if (sv.paMode && (sv.engine || 'kokoro') === 'kokoro') {
     try {
-      const src = await generateElevenLabsAudio(line, sv.elKey, sv.elVoiceId || 'pNInz6obpgDQGcFmaJgB');
+      const src = await generateKokoroAudio(line, sv.kokoroVoice || 'am_michael', sv.rate || 0.9, false);
       await playAudioAndWait(src);
       return;
     } catch (err) {
-      showToast(`ElevenLabs error — falling back to TTS`);
+      showToast('Enhanced voice unavailable — using device voice');
     }
   }
 
@@ -2390,7 +2452,7 @@ async function announceText(text) {
   });
 }
 
-async function announcePlayer(player) {
+function buildPlayerAnnouncementText(player) {
   const sv = S.superVoice || {};
 
   // Auto-migrate saved templates that pre-date the {position} token
@@ -2400,12 +2462,14 @@ async function announcePlayer(player) {
   }
 
   const posSpoken = POSITION_SPOKEN[player.pos] || player.pos || '';
-  const text = tmpl
+  return tmpl
     .replace('{name}', player.name)
     .replace('{number}', player.number)
     .replace('{position}', posSpoken);
+}
 
-  return announceText(text);
+async function announcePlayer(player) {
+  return announceText(buildPlayerAnnouncementText(player));
 }
 
 function setDJStatusBadge(playing) {
@@ -2566,10 +2630,12 @@ function syncSVUI() {
   if (paPanel)  paPanel.hidden   = !sv.paMode;
   const paTmpl = document.getElementById('svPaTemplate');
   if (paTmpl) paTmpl.value = (sv.paTemplate?.includes('{position}') ? sv.paTemplate : null) || DEFAULT_PA_TEMPLATE;
-  const elKey = document.getElementById('svElKey');
-  if (elKey) elKey.value = sv.elKey || '';
-  const elVoice = document.getElementById('svElVoice');
-  if (elVoice) elVoice.value = sv.elVoiceId || 'pNInz6obpgDQGcFmaJgB';
+  const engine = document.getElementById('svEngine');
+  if (engine) engine.value = sv.engine || 'kokoro';
+  const kokoroPanel = document.getElementById('svKokoroPanel');
+  if (kokoroPanel) kokoroPanel.hidden = (sv.engine || 'kokoro') !== 'kokoro';
+  const kokoroVoice = document.getElementById('svKokoroVoice');
+  if (kokoroVoice) kokoroVoice.value = sv.kokoroVoice || 'am_michael';
   const customText = document.getElementById('svCustomText');
   if (customText) customText.value = sv.customText || '';
 }
@@ -2619,29 +2685,66 @@ document.getElementById('svCustomAnnounce')?.addEventListener('click', async () 
   await announceText(text);
 });
 
-/* ElevenLabs key + voice wiring */
-document.getElementById('svElKey')?.addEventListener('input', e => {
-  S.superVoice = { ...S.superVoice, elKey: e.target.value.trim() };
-  elCache.clear();
+/* Free enhanced voice wiring */
+document.getElementById('svEngine')?.addEventListener('change', e => {
+  const engine = e.target.value;
+  S.superVoice = { ...S.superVoice, engine };
+  document.getElementById('svKokoroPanel').hidden = engine !== 'kokoro';
+  saveState();
+  showToast(engine === 'kokoro' ? 'Kokoro enhanced voice selected' : 'Device voice selected');
+});
+
+document.getElementById('svKokoroVoice')?.addEventListener('change', e => {
+  S.superVoice = { ...S.superVoice, kokoroVoice: e.target.value };
   saveState();
 });
 
-document.getElementById('svElVoice')?.addEventListener('change', e => {
-  S.superVoice = { ...S.superVoice, elVoiceId: e.target.value };
-  elCache.clear();
-  saveState();
-});
-
-document.getElementById('svElTest')?.addEventListener('click', async () => {
-  const sv = S.superVoice || {};
-  if (!sv.elKey) { showToast('Enter your ElevenLabs API key first'); return; }
-  showToast('Testing ElevenLabs…');
+document.getElementById('svKokoroLoad')?.addEventListener('click', async e => {
+  const button = e.currentTarget;
+  button.disabled = true;
+  button.textContent = 'Preparing Voice…';
   try {
-    const src = await generateElevenLabsAudio('Testing. One. Two. Three.', sv.elKey, sv.elVoiceId || 'pNInz6obpgDQGcFmaJgB');
+    const sv = S.superVoice || {};
+    const src = await generateKokoroAudio(
+      'Welcome to Terry Sanford Softball. The enhanced announcer is ready.',
+      sv.kokoroVoice || 'am_michael',
+      sv.rate || 0.9,
+    );
     await playAudioAndWait(src);
-    showToast('ElevenLabs connected!');
-  } catch {
-    showToast('ElevenLabs test failed — check your API key');
+    showToast('Enhanced announcer is ready');
+  } catch (error) {
+    console.warn('Kokoro test failed', error);
+    showToast('Enhanced voice could not load — device fallback remains available');
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Download & Test Voice';
+  }
+});
+
+document.getElementById('svKokoroPrecache')?.addEventListener('click', async e => {
+  const players = S.players.filter(p => !isBenchPlayer(p));
+  if (!players.length) { showToast('Add players before preparing the roster'); return; }
+  const button = e.currentTarget;
+  button.disabled = true;
+  button.textContent = 'Preparing 0/' + players.length;
+  try {
+    const sv = S.superVoice || {};
+    const voice = sv.kokoroVoice || 'am_michael';
+    const speed = sv.rate || 0.9;
+    for (let i = 0; i < players.length; i++) {
+      setKokoroStatus('', `Preparing roster announcements… ${i + 1}/${players.length}`, ((i + 1) / players.length) * 100);
+      button.textContent = `Preparing ${i + 1}/${players.length}`;
+      await generateKokoroAudio(buildPlayerAnnouncementText(players[i]), voice, speed);
+    }
+    setKokoroStatus('ready', `${players.length} roster announcement${players.length === 1 ? '' : 's'} ready offline.`, null);
+    showToast('Roster announcements are ready offline');
+  } catch (error) {
+    console.warn('Kokoro roster preparation failed', error);
+    setKokoroStatus('error', 'Roster preparation stopped. Device voice fallback is active.', null);
+    showToast('Could not finish roster preparation');
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Prepare Roster';
   }
 });
 
@@ -2670,7 +2773,6 @@ document.getElementById('svPaPreset')?.addEventListener('click', () => {
 
 /* Manual announce button */
 document.getElementById('announceBtn').addEventListener('click', () => {
-  if (!('speechSynthesis' in window)) { showToast('TTS not supported on this device'); return; }
   const g = S.game;
   if (!g) return;
   const pid = S.lineup[g.lineupIndex % S.lineup.length];
@@ -3054,7 +3156,7 @@ function playSound(type) {
       case 'catch':     playMp3('sounds/catch.mp3');     return;
       case 'foul':      playMp3('sounds/foul-ball.mp3'); return;
       case 'homerun':   playMp3('sounds/homerun.mp3');   return;
-      case 'homerunCall': playMp3('sounds/Homerun.mp3'); return;
+      case 'homerunCall': playMp3('sounds/homerun-call.mp3'); return;
       case 'strikeoutCall': playMp3('sounds/Strikeout.mp3'); return;
       case 'soNervy':   playMp3('sounds/SoNervy.mp3');   return;
       case 'scubbaa':    playMp3('sounds/scubbaaa.mp3');   return;

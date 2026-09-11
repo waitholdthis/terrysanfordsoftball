@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   Foundry — App Landing Page Styles
+   Terry Sanford Softball — App Landing Page Styles
    Extends styles.css (shared variables + base classes)
 ═══════════════════════════════════════════════════════ */
 
@@ -105,7 +105,7 @@
 
 .store-btn:hover {
   background: var(--slate);
-  border-color: rgba(245, 158, 11, 0.38);
+  border-color: rgba(213, 0, 70, 0.38);
   transform: translateY(-3px);
 }
 
@@ -221,7 +221,7 @@
 .app-phone-screen {
   height: calc(100% - 54px);
   background:
-    linear-gradient(180deg, rgba(245, 158, 11, 0.1) 0%, transparent 28%),
+    linear-gradient(180deg, rgba(213, 0, 70, 0.1) 0%, transparent 28%),
     var(--black);
   border-radius: 32px;
   padding: 14px 12px;
@@ -279,7 +279,7 @@
   stroke-dasharray: 503;
   stroke-dashoffset: 503;
   transition: stroke-dashoffset 2.2s cubic-bezier(0.16, 1, 0.3, 1);
-  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.4));
+  filter: drop-shadow(0 0 6px rgba(213, 0, 70, 0.4));
 }
 
 .aps-ring-center {
@@ -421,7 +421,7 @@
 
 .uvp-pillar:hover {
   transform: translateY(-4px);
-  border-color: rgba(245, 158, 11, 0.34);
+  border-color: rgba(213, 0, 70, 0.34);
   box-shadow: 0 18px 54px rgba(0, 0, 0, 0.32);
 }
 
@@ -474,7 +474,7 @@
 
 .feature-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(245, 158, 11, 0.3);
+  border-color: rgba(213, 0, 70, 0.3);
   box-shadow: 0 18px 54px rgba(0, 0, 0, 0.32);
 }
 
@@ -577,7 +577,7 @@
 .ob-num {
   font-family: Anton, Impact, sans-serif;
   font-size: 3.8rem;
-  color: rgba(245, 158, 11, 0.22);
+  color: rgba(213, 0, 70, 0.22);
   line-height: 1;
   padding-top: 24px;
   text-align: center;
@@ -592,7 +592,7 @@
 }
 
 .ob-content:hover {
-  border-color: rgba(245, 158, 11, 0.32);
+  border-color: rgba(213, 0, 70, 0.32);
   transform: translateY(-3px);
 }
 
@@ -676,7 +676,7 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 50% 80%, rgba(245, 158, 11, 0.12), transparent 60%);
+    radial-gradient(ellipse 60% 50% at 50% 80%, rgba(213, 0, 70, 0.12), transparent 60%);
   pointer-events: none;
 }
 
@@ -735,8 +735,8 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: rgba(245, 158, 11, 0.15);
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: rgba(213, 0, 70, 0.15);
+  border: 1px solid rgba(213, 0, 70, 0.4);
   margin-top: 2px;
   position: relative;
 }
@@ -781,13 +781,13 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  border-bottom: 2px solid #f59e0b;
+  border-bottom: 2px solid #d50046;
 }
 
 .epdf-home {
   font-size: 0.68rem;
   font-weight: 700;
-  color: #f59e0b;
+  color: #d50046;
   letter-spacing: 0.06em;
   font-family: 'IBM Plex Mono', monospace;
 }
@@ -822,9 +822,9 @@
 .epdf-badge {
   font-size: 0.55rem;
   font-weight: 700;
-  color: #f59e0b;
+  color: #d50046;
   letter-spacing: 0.08em;
-  border: 1px solid rgba(245,158,11,0.4);
+  border: 1px solid rgba(213, 0, 70,0.4);
   padding: 2px 6px;
   border-radius: 3px;
   font-family: 'IBM Plex Mono', monospace;
@@ -860,9 +860,9 @@
 
 .epdf-bs-team { text-align: left !important; color: #8a929b !important; font-size: 0.58rem; }
 .epdf-runs      { color: #ef4444 !important; font-weight: 700; }
-.epdf-runs-home { color: #f59e0b !important; font-weight: 700; }
+.epdf-runs-home { color: #d50046 !important; font-weight: 700; }
 .epdf-total-away{ color: #101820 !important; font-weight: 700; }
-.epdf-total-home{ color: #f59e0b !important; font-weight: 700; }
+.epdf-total-home{ color: #d50046 !important; font-weight: 700; }
 .epdf-rhe       { color: #8a929b !important; }
 
 .epdf-grid { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; }
@@ -904,7 +904,7 @@
 }
 
 .epdf-ab.epdf-hit { color: #101820; font-weight: 700; }
-.epdf-ab.epdf-hr  { color: #f59e0b; font-weight: 700; }
+.epdf-ab.epdf-hr  { color: #d50046; font-weight: 700; }
 .epdf-ab.epdf-out { color: #ef4444; }
 
 .epdf-gc-stat { text-align: center; font-size: 0.58rem; color: #101820; font-weight: 700; }
@@ -924,7 +924,7 @@
 .epdf-shadow {
   position: absolute;
   inset: 8px -8px -8px 8px;
-  background: rgba(245,158,11,0.12);
+  background: rgba(213, 0, 70,0.12);
   border-radius: 8px;
   z-index: -1;
 }

@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#020617">
+  <meta name="theme-color" content="#061f43">
   <meta name="format-detection" content="telephone=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Foundry">
+  <meta name="apple-mobile-web-app-title" content="TS Softball">
   <link rel="manifest" href="./manifest.json">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
-  <title>Foundry</title>
+  <title>Terry Sanford Softball</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="foundry.css?v=74">
+  <link rel="stylesheet" href="ts-softball.css?v=3">
 </head>
 <body>
 
@@ -23,7 +23,7 @@
 
 <!-- ═══ INSTALL BANNER ═══ -->
 <div id="installBanner" class="install-banner hidden">
-  <span>Add Foundry to your home screen for the full experience.</span>
+  <span>Add TS Softball to your home screen for the full experience.</span>
   <button id="installBtn" class="install-btn">Install</button>
   <button id="installDismiss" class="install-dismiss" aria-label="Dismiss">✕</button>
 </div>
@@ -34,30 +34,21 @@
 <div id="screen-setup" class="screen active" role="main" aria-label="Team setup">
   <div class="setup-wrap">
     <div class="setup-logo" aria-hidden="true">
-      <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="22" y="4" width="15" height="15" rx="1" transform="rotate(45 22 4)" fill="#f59e0b" opacity="0.9"/>
-        <circle cx="22" cy="22" r="3" fill="#f7f7f4"/>
-        <circle cx="22" cy="6"  r="1.8" fill="#f7f7f4"/>
-        <circle cx="38" cy="22" r="1.8" fill="#f7f7f4"/>
-        <circle cx="22" cy="38" r="1.8" fill="#f7f7f4"/>
-        <circle cx="6"  cy="22" r="1.8" fill="#f7f7f4"/>
-        <line x1="22" y1="38" x2="6"  y2="22" stroke="#f59e0b" stroke-width="0.8" opacity="0.5"/>
-        <line x1="22" y1="38" x2="38" y2="22" stroke="#f59e0b" stroke-width="0.8" opacity="0.5"/>
-      </svg>
+      <img src="icons/ts-logo.png" alt="" />
     </div>
-    <h1 class="setup-title">Foundry</h1>
+    <h1 class="setup-title">TS Softball</h1>
     <p class="setup-sub">Set up your team to get started.</p>
 
     <form id="setupForm" class="setup-form" novalidate>
       <div class="field-group">
         <label for="teamName">Team Name</label>
-        <input id="teamName" type="text" placeholder="e.g. River Dogs" autocomplete="organization" required maxlength="40">
+        <input id="teamName" type="text" value="Terry Sanford" placeholder="e.g. Terry Sanford" autocomplete="organization" required maxlength="40">
       </div>
       <div class="field-group">
         <label>Sport</label>
         <div class="seg-control" role="group" aria-label="Sport">
-          <button type="button" class="seg-btn active" data-sport="baseball">Baseball</button>
-          <button type="button" class="seg-btn" data-sport="softball">Softball</button>
+          <button type="button" class="seg-btn" data-sport="baseball">Baseball</button>
+          <button type="button" class="seg-btn active" data-sport="softball">Softball</button>
         </div>
       </div>
       <div class="field-group">
@@ -554,7 +545,7 @@
       <div class="dj-tts">
         <!-- SuperVoice header row -->
         <div class="sv-header">
-          <span class="dj-label" style="margin-bottom:0">SUPERVOICE</span>
+          <span class="dj-label" style="margin-bottom:0">FREE ANNOUNCER</span>
           <label class="sv-toggle-wrap" aria-label="Enable SuperVoice auto-announce">
             <input type="checkbox" id="svToggle" role="switch">
             <span class="sv-pill" aria-hidden="true"></span>
@@ -570,7 +561,7 @@
           </div>
 
           <div class="sv-field">
-            <label class="sv-label" for="svVoice">Voice</label>
+            <label class="sv-label" for="svVoice">Device fallback voice</label>
             <select id="svVoice" class="sv-select">
               <option value="">Default voice</option>
             </select>
@@ -582,7 +573,7 @@
               <input type="range" id="svRate" class="sv-range" min="0.5" max="1.5" step="0.1" value="0.9" aria-label="Speech rate">
             </div>
             <div class="sv-field">
-              <label class="sv-label" for="svPitch">Pitch <span id="svPitchVal" class="sv-val">0.9</span></label>
+              <label class="sv-label" for="svPitch">Fallback pitch <span id="svPitchVal" class="sv-val">0.9</span></label>
               <input type="range" id="svPitch" class="sv-range" min="0.5" max="1.5" step="0.1" value="0.9" aria-label="Speech pitch">
             </div>
           </div>
@@ -599,7 +590,7 @@
           </div>
           <button type="button" class="btn-secondary btn-full" id="svCustomAnnounce">Announce Custom Message</button>
 
-          <!-- PA Announcer sub-section -->
+          <!-- Enhanced PA announcer sub-section -->
           <div class="sv-divider"></div>
           <div class="sv-pa-header">
             <span class="sv-label" style="margin-bottom:0">PA Announcer Mode</span>
@@ -610,21 +601,34 @@
           </div>
           <div id="svPaPanel" hidden>
             <div class="sv-field">
-              <label class="sv-label" for="svElKey">ElevenLabs API Key <span class="field-optional">(free at elevenlabs.io)</span></label>
-              <div class="sv-el-key-row">
-                <input type="password" id="svElKey" class="sv-input" placeholder="sk_…" autocomplete="off" spellcheck="false">
-                <button type="button" class="btn-secondary" id="svElTest">Test</button>
-              </div>
-            </div>
-            <div class="sv-field">
-              <label class="sv-label" for="svElVoice">Announcer Voice</label>
-              <select id="svElVoice" class="sv-select">
-                <option value="pNInz6obpgDQGcFmaJgB">Adam — Deep &amp; Clear</option>
-                <option value="nPczCjzI2devNBz1zQrb">Brian — Authoritative</option>
-                <option value="VR6AewLTigWG4xSOukaG">Arnold — Strong</option>
-                <option value="TX3LPaxmHKxFdv7VOQHJ">Liam — Energetic</option>
-                <option value="onwK4e9ZLuTAKqWW03F9">Daniel — Rich</option>
+              <label class="sv-label" for="svEngine">Voice engine</label>
+              <select id="svEngine" class="sv-select">
+                <option value="kokoro">Kokoro Enhanced — free, downloaded once</option>
+                <option value="device">Device Voice — instant fallback</option>
               </select>
+            </div>
+            <div id="svKokoroPanel">
+              <div class="sv-field">
+                <label class="sv-label" for="svKokoroVoice">Enhanced announcer voice</label>
+                <select id="svKokoroVoice" class="sv-select">
+                  <option value="am_michael">Michael — Stadium</option>
+                  <option value="am_adam">Adam — Deep</option>
+                  <option value="am_echo">Echo — Energetic</option>
+                  <option value="af_heart">Heart — Warm</option>
+                  <option value="af_bella">Bella — Clear</option>
+                  <option value="bf_emma">Emma — British</option>
+                </select>
+              </div>
+              <div class="sv-engine-status" id="svKokoroStatus" role="status" aria-live="polite">
+                <span class="sv-status-dot"></span>
+                <span id="svKokoroStatusText">Not downloaded — device voice will be used until ready.</span>
+              </div>
+              <div class="sv-progress" id="svKokoroProgress" hidden><span id="svKokoroProgressFill"></span></div>
+              <div class="sv-engine-actions">
+                <button type="button" class="btn-secondary" id="svKokoroLoad">Download &amp; Test Voice</button>
+                <button type="button" class="btn-secondary" id="svKokoroPrecache">Prepare Roster</button>
+              </div>
+              <p class="sv-hint">Prepare Roster generates every player announcement before the game. After the first model download, generated announcements are stored on this device for offline playback.</p>
             </div>
             <div class="sv-field">
               <label class="sv-label" for="svPaTemplate">PA Template</label>
@@ -1249,6 +1253,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="scorebook-export-v60.js"></script>
-<script src="foundry-v74.js"></script>
+<script src="ts-softball.js?v=3"></script>
 </body>
 </html>

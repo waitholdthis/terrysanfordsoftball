@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════
-   Foundry — App CSS
+   Terry Sanford Softball — App CSS
    Design tokens match BLUEPRINT.md exactly
 ═══════════════════════════════════════════════ */
 
@@ -8,15 +8,15 @@
 .hidden { display: none !important; }
 
 :root {
-  --bg-base:     #020617;
-  --bg-surface:  #0E1223;
-  --bg-elevated: #1B2336;
-  --border:      #334155;
+  --bg-base:     #020b18;
+  --bg-surface:  #061f43;
+  --bg-elevated: #0b315c;
+  --border:      #365676;
   --text-1:      #F8FAFC;
   --text-2:      #94A3B8;
-  --amber:       #F59E0B;
-  --amber-dim:   rgba(245,158,11,0.15);
-  --amber-glow:  0 0 12px rgba(245,158,11,0.4);
+  --amber:       #D50046;
+  --amber-dim:   rgba(213,0,70,0.15);
+  --amber-glow:  0 0 12px rgba(213,0,70,0.4);
   --green:       #22C55E;
   --green-dim:   rgba(34,197,94,0.15);
   --red:         #EF4444;
@@ -273,7 +273,7 @@ html, body {
 .field-group input:focus,
 .field-group select:focus {
   border-color: var(--amber);
-  box-shadow: 0 0 0 2px rgba(245,158,11,0.2);
+  box-shadow: 0 0 0 2px rgba(213, 0, 70,0.2);
 }
 .form-row {
   display: flex;
@@ -415,7 +415,7 @@ html, body {
   width: 56px; height: 56px;
   margin: 0 auto;
 }
-.setup-logo svg { width: 100%; height: 100%; }
+.setup-logo img { width: 100%; height: 100%; object-fit: contain; }
 .setup-title {
   text-align: center;
   font-size: 32px;
@@ -1142,9 +1142,9 @@ html, body {
 }
 .outcome-btn:active { transform: scale(0.94); opacity: 0.8; }
 .outcome-btn.out    { background: var(--red-dim);   color: var(--red);   border: 1px solid rgba(239,68,68,0.3); }
-.outcome-btn.obp    { background: var(--amber-dim);  color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+.outcome-btn.obp    { background: var(--amber-dim);  color: var(--amber); border: 1px solid rgba(213, 0, 70,0.3); }
 .outcome-btn.hit    { background: var(--green-dim);  color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
-.outcome-btn.hr     { background: rgba(245,158,11,0.25); color: var(--amber); border: 1px solid var(--amber); font-size: 14px; }
+.outcome-btn.hr     { background: rgba(213, 0, 70,0.25); color: var(--amber); border: 1px solid var(--amber); font-size: 14px; }
 
 /* Hold Runners strip */
 .hold-strip {
@@ -1205,9 +1205,9 @@ html, body {
   flex: 1;
   min-width: 56px;
   min-height: 44px;
-  border: 1px solid rgba(245,158,11,0.4);
+  border: 1px solid rgba(213, 0, 70,0.4);
   border-radius: 8px;
-  background: rgba(245,158,11,0.12);
+  background: rgba(213, 0, 70,0.12);
   color: var(--amber);
   font-size: 13px;
   font-weight: 700;
@@ -1216,7 +1216,7 @@ html, body {
   transition: transform 100ms, background 100ms;
   letter-spacing: 0.04em;
 }
-.steal-btn:active { transform: scale(0.94); background: rgba(245,158,11,0.25); }
+.steal-btn:active { transform: scale(0.94); background: rgba(213, 0, 70,0.25); }
 .steal-btn.caught {
   border-color: rgba(239,68,68,0.38);
   background: rgba(239,68,68,0.12);
@@ -1246,9 +1246,9 @@ html, body {
   border: 1px solid transparent;
 }
 .recent-play-chip.out   { background: var(--red-dim);   color: var(--red);   border-color: rgba(239,68,68,0.3); }
-.recent-play-chip.obp   { background: var(--amber-dim); color: var(--amber); border-color: rgba(245,158,11,0.3); }
+.recent-play-chip.obp   { background: var(--amber-dim); color: var(--amber); border-color: rgba(213, 0, 70,0.3); }
 .recent-play-chip.hit   { background: var(--green-dim); color: var(--green); border-color: rgba(34,197,94,0.3); }
-.recent-play-chip.hr    { background: rgba(245,158,11,0.25); color: var(--amber); border-color: var(--amber); }
+.recent-play-chip.hr    { background: rgba(213, 0, 70,0.25); color: var(--amber); border-color: var(--amber); }
 .recent-play-result { font-size: 12px; font-weight: 800; }
 .recent-play-name   { font-size: 10px; font-weight: 500; opacity: 0.8; }
 .count-strip {
@@ -1270,7 +1270,7 @@ html, body {
 }
 .count-btn:active { transform: scale(0.96); }
 .ball-btn   { background: var(--green-dim);  color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
-.strike-btn { background: var(--amber-dim);  color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+.strike-btn { background: var(--amber-dim);  color: var(--amber); border: 1px solid rgba(213, 0, 70,0.3); }
 .foul-btn   { background: var(--bg-elevated); color: var(--text-2); border: 1px solid var(--border); }
 .reset-btn  { background: var(--bg-elevated); color: var(--text-2); border: 1px solid var(--border); }
 
@@ -1571,6 +1571,51 @@ html, body {
   padding: 8px 14px;
   font-size: 13px;
 }
+.sv-engine-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 8px 0;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  color: var(--text-2);
+  font-size: 11px;
+  line-height: 1.4;
+}
+.sv-engine-status.ready { border-color: var(--green); color: var(--green); }
+.sv-engine-status.error { border-color: var(--red); color: var(--red); }
+.sv-status-dot {
+  width: 8px;
+  height: 8px;
+  margin-top: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.sv-progress {
+  height: 5px;
+  margin: 8px 0 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--border);
+}
+.sv-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--purple);
+  transition: width 180ms ease;
+}
+.sv-engine-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.sv-engine-actions .btn-secondary { min-height: 42px; padding: 8px 10px; font-size: 12px; }
+@media (max-width: 520px) { .sv-engine-actions { grid-template-columns: 1fr; } }
 
 /* ── Between-Innings Playlist ── */
 .dj-playlist {
@@ -1942,7 +1987,7 @@ html, body {
 }
 .pitch-ball   { background: rgba(59,130,246,0.2); color: #60a5fa; }
 .pitch-strike { background: rgba(239,68,68,0.2);  color: #f87171; }
-.pitch-foul   { background: rgba(245,158,11,0.2); color: var(--amber); }
+.pitch-foul   { background: rgba(213, 0, 70,0.2); color: var(--amber); }
 .pitch-pitcher-label {
   flex: 1;
   font-size: 14px;
@@ -1994,7 +2039,7 @@ html, body {
   transition: background 0.1s, color 0.1s, border-color 0.1s;
 }
 .pitch-type-btn.active {
-  background: rgba(245,158,11,0.15);
+  background: rgba(213, 0, 70,0.15);
   border-color: var(--amber);
   color: var(--amber);
 }
@@ -2020,7 +2065,7 @@ html, body {
   border-color: rgba(255,255,255,0.15);
 }
 .zone-cell.zone-selected {
-  background: rgba(245,158,11,0.35);
+  background: rgba(213, 0, 70,0.35);
   border-color: var(--amber);
 }
 .zone-cell:active { opacity: 0.7; }
@@ -2277,8 +2322,8 @@ html, body {
   }
 }
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 8px rgba(245,158,11,0.3); }
-  50%       { box-shadow: 0 0 18px rgba(245,158,11,0.6); }
+  0%, 100% { box-shadow: 0 0 8px rgba(213, 0, 70,0.3); }
+  50%       { box-shadow: 0 0 18px rgba(213, 0, 70,0.6); }
 }
 
 /* Scorebook dimmed while fielding (tablet: all columns visible simultaneously) */
@@ -2302,7 +2347,7 @@ html, body {
   padding: 28px 24px 24px;
   width: min(320px, 90vw);
   text-align: center;
-  border: 1px solid rgba(245,158,11,0.3);
+  border: 1px solid rgba(213, 0, 70,0.3);
   box-shadow: 0 8px 32px rgba(0,0,0,0.6);
 }
 .bi-prompt-icon { font-size: 36px; margin-bottom: 10px; }
@@ -2342,7 +2387,7 @@ html, body {
 .game-start-card {
   width: min(340px, 100%);
   padding: 22px;
-  border: 1px solid rgba(245,158,11,0.35);
+  border: 1px solid rgba(213, 0, 70,0.35);
   border-radius: 14px;
   background: var(--bg-surface);
   box-shadow: 0 20px 60px rgba(0,0,0,0.55);
@@ -2416,7 +2461,7 @@ html, body {
 .warmup-np-name {
   font-size: 14px;
   font-weight: 600;
-  color: #f59e0b;
+  color: #d50046;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2452,9 +2497,9 @@ html, body {
   padding-bottom: 2px;
 }
 .warmup-lib-btns .walkup-lib-btn.active {
-  background: #f59e0b;
+  background: #d50046;
   color: #020617;
-  border-color: #f59e0b;
+  border-color: #d50046;
 }
 .warmup-actions {
   display: grid;
