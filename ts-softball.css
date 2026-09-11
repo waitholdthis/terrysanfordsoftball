@@ -248,7 +248,8 @@ html, body {
 }
 .field-optional { font-weight: 400; text-transform: none; color: var(--text-2); font-size: 12px; }
 .field-group input,
-.field-group select {
+.field-group select,
+.field-group textarea {
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -271,10 +272,16 @@ html, body {
   padding-right: 36px;
 }
 .field-group input:focus,
-.field-group select:focus {
+.field-group select:focus,
+.field-group textarea:focus {
   border-color: var(--amber);
   box-shadow: 0 0 0 2px rgba(213, 0, 70,0.2);
 }
+.field-group textarea { resize: vertical; line-height: 1.4; }
+.announce-hint-row { display: flex; align-items: flex-start; gap: 10px; }
+.field-hint { flex: 1; font-size: 12px; line-height: 1.4; color: var(--text-2); }
+.field-hint code { background: var(--bg-elevated); padding: 1px 4px; border-radius: 3px; }
+.announce-preview-btn { flex-shrink: 0; font-size: 12px; padding: 6px 12px; white-space: nowrap; }
 .form-row {
   display: flex;
   gap: 12px;

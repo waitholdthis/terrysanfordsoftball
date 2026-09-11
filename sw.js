@@ -163,13 +163,17 @@ self.addEventListener('install', e => {
 });
 
 self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
-      .then(() => self.clients.matchAll({ type: 'window' }))
-      .then(clients => Promise.all(clients.map(client => client.navigate(client.url))))
-  );
+  const activated = caches.keys()
+    .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    .then(() => self.clients.claim());
+  e.waitUntil(activated);
+  // Reload open pages only after activation finishes. A navigation awaited inside
+  // waitUntil needs this worker's fetch handler, which cannot run until activation
+  // completes, so the page and the worker would deadlock.
+  activated
+    .then(() => self.clients.matchAll({ type: 'window' }))
+    .then(clients => Promise.all(clients.map(client => client.navigate(client.url))))
+    .catch(() => {});
 });
 
 self.addEventListener('fetch', e => {

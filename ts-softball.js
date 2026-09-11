@@ -315,6 +315,7 @@ const playerNameEl= document.getElementById('playerName');
 const playerPosEl = document.getElementById('playerPos');
 const playerBatsEl= document.getElementById('playerBats');
 const playerThrowEl= document.getElementById('playerThrows');
+const playerAnnounceEl = document.getElementById('playerAnnounce');
 const walkUpFileEl= document.getElementById('walkUpFile');
 const walkUpNameEl= document.getElementById('walkUpFileName');
 let pendingAudioBlob = null;
@@ -484,6 +485,7 @@ function openPlayerSheet(player) {
     playerThrowEl.value= player.throws;
     walkUpNameEl.textContent = player.walkUpKey ? 'File saved' : 'No file';
     document.getElementById('walkUpUrl').value = player.walkUpUrl || '';
+    playerAnnounceEl.value = player.announceText || '';
   } else {
     document.getElementById('playerSheetTitle').textContent = 'Add Player';
     playerForm.reset();
@@ -525,6 +527,7 @@ playerForm.addEventListener('submit', async e => {
   player.pos    = playerPosEl.value;
   player.bats   = playerBatsEl.value;
   player.throws = playerThrowEl.value;
+  player.announceText = playerAnnounceEl.value.trim() || null;
 
   if (pendingAudioBlob) {
     const key = `audio_${player.id}`;
@@ -540,6 +543,17 @@ playerForm.addEventListener('submit', async e => {
   saveState();
   closePlayerSheet();
   renderPlayerList();
+});
+
+// Speak the line exactly as it will be announced, using the unsaved form values
+document.getElementById('previewPlayerAnnounce').addEventListener('click', () => {
+  const draft = {
+    name: playerNameEl.value.trim() || 'Player Name',
+    number: playerNumEl.value.trim() || '0',
+    pos: playerPosEl.value,
+    announceText: playerAnnounceEl.value.trim() || null,
+  };
+  announceText(buildPlayerAnnouncementText(draft));
 });
 
 // Roster "Done" button → Lineup
@@ -2455,17 +2469,21 @@ async function announceText(text) {
 function buildPlayerAnnouncementText(player) {
   const sv = S.superVoice || {};
 
-  // Auto-migrate saved templates that pre-date the {position} token
-  let tmpl = sv.paMode ? sv.paTemplate : sv.template;
-  if (!tmpl || !tmpl.includes('{position}')) {
-    tmpl = sv.paMode ? DEFAULT_PA_TEMPLATE : DEFAULT_SV_TEMPLATE;
+  // A player's own line wins over the team template
+  let tmpl = player.announceText;
+  if (!tmpl) {
+    // Auto-migrate saved templates that pre-date the {position} token
+    tmpl = sv.paMode ? sv.paTemplate : sv.template;
+    if (!tmpl || !tmpl.includes('{position}')) {
+      tmpl = sv.paMode ? DEFAULT_PA_TEMPLATE : DEFAULT_SV_TEMPLATE;
+    }
   }
 
   const posSpoken = POSITION_SPOKEN[player.pos] || player.pos || '';
   return tmpl
-    .replace('{name}', player.name)
-    .replace('{number}', player.number)
-    .replace('{position}', posSpoken);
+    .replaceAll('{name}', player.name)
+    .replaceAll('{number}', player.number)
+    .replaceAll('{position}', posSpoken);
 }
 
 async function announcePlayer(player) {
